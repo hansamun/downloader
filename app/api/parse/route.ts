@@ -7,28 +7,22 @@ export async function POST(request: NextRequest): Promise<NextResponse<VideoInfo
     const { url } = await request.json()
 
     if (!url || typeof url !== "string") {
-      return NextResponse.json({ error: "URL is required" }, { status: 400 })
+      return NextResponse.json({ error: "URL diperlukan" }, { status: 400 })
     }
 
     const platform = detectPlatform(url)
 
     if (!platform) {
-      return NextResponse.json({ error: "Unsupported platform. Please use a TikTok or Facebook URL." }, { status: 400 })
+      return NextResponse.json({ error: "Platform tidak didukung. Gunakan URL TikTok." }, { status: 400 })
     }
 
-    let videoInfo: VideoInfo
-
-    if (platform === "tiktok") {
-      videoInfo = await fetchTikTokVideo(url)
-    } else {
-      videoInfo = await fetchFacebookVideo(url)
-    }
+    const videoInfo = await fetchTikTokVideo(url)
 
     return NextResponse.json(videoInfo)
   } catch (error) {
     console.error("Parse error:", error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to parse video" },
+      { error: error instanceof Error ? error.message : "Gagal memproses video" },
       { status: 500 },
     )
   }
@@ -46,13 +40,13 @@ async function fetchTikTokVideo(url: string): Promise<VideoInfo> {
   })
 
   if (!response.ok) {
-    throw new Error("Failed to fetch TikTok video info")
+    throw new Error("Gagal mengambil info video TikTok")
   }
 
   const data = await response.json()
 
   if (data.code !== 0 || !data.data) {
-    throw new Error(data.msg || "Failed to parse TikTok video")
+    throw new Error(data.msg || "Gagal memproses video TikTok")
   }
 
   const video = data.data
@@ -60,7 +54,7 @@ async function fetchTikTokVideo(url: string): Promise<VideoInfo> {
 
   return {
     platform: "tiktok",
-    title: video.title || "TikTok Video",
+    title: video.title || "Video TikTok",
     duration,
     thumbnail: video.cover || video.origin_cover || "/tiktok-thumbnail.png",
     available_resolutions: ["360p", "480p", "720p", "1080p"],
@@ -71,59 +65,6 @@ async function fetchTikTokVideo(url: string): Promise<VideoInfo> {
       "1080p": video.hdplay || video.play,
     },
     audio_link: video.music || "",
-  }
-}
-
-async function fetchFacebookVideo(url: string): Promise<VideoInfo> {
-  // Using a public Facebook video info endpoint
-  // Note: Facebook's API is more restricted, this is a simplified implementation
-  const apiUrl = `https://www.fdown.net/api.php?url=${encodeURIComponent(url)}`
-
-  try {
-    const response = await fetch(apiUrl, {
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      },
-    })
-
-    if (response.ok) {
-      const data = await response.json()
-
-      if (data.sd || data.hd) {
-        return {
-          platform: "facebook",
-          title: data.title || "Facebook Video",
-          duration: data.duration || "00:00",
-          thumbnail: data.thumbnail || "/facebook-video-thumbnail.png",
-          available_resolutions: data.hd ? ["360p", "480p", "720p", "1080p"] : ["360p", "480p"],
-          video_links: {
-            "360p": data.sd || data.hd,
-            "480p": data.sd || data.hd,
-            "720p": data.hd || data.sd,
-            "1080p": data.hd || data.sd,
-          },
-          audio_link: data.audio || "",
-        }
-      }
-    }
-  } catch (e) {
-    console.error("Facebook API error:", e)
-  }
-
-  // Fallback response for demo purposes
-  return {
-    platform: "facebook",
-    title: "Facebook Video",
-    duration: "00:30",
-    thumbnail: "/facebook-video-thumbnail-blue-social-media.jpg",
-    available_resolutions: ["360p", "480p", "720p"],
-    video_links: {
-      "360p": url,
-      "480p": url,
-      "720p": url,
-    },
-    audio_link: url,
   }
 }
 

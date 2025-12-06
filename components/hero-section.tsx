@@ -11,13 +11,12 @@ export function HeroSection() {
 
         <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-3 sm:mb-4 neon-text text-balance">
           <span className="bg-gradient-to-r from-[#00D4FF] to-[#6A00FF] bg-clip-text text-transparent">
-            Video Downloader
+            TikTok Downloader
           </span>
         </h1>
 
         <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-8 px-2 text-pretty">
-          Unduh video dari TikTok dan Facebook secara instan. Pilih resolusi dan format yang kamu inginkan - MP4 atau
-          MP3.
+          Unduh video dari TikTok secara instan. Pilih resolusi dan format yang kamu inginkan - MP4 atau MP3.
         </p>
 
         <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-muted-foreground">

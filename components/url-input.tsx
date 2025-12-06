@@ -29,7 +29,7 @@ export function UrlInput({ onSubmit, isLoading }: UrlInputProps) {
           <Link2 className="w-5 h-5 text-muted-foreground shrink-0" />
           <Input
             type="url"
-            placeholder="Tempel link video TikTok atau Facebook..."
+            placeholder="Tempel link video TikTok..."
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground placeholder:text-muted-foreground text-sm sm:text-base"
@@ -54,7 +54,7 @@ export function UrlInput({ onSubmit, isLoading }: UrlInputProps) {
           )}
         </Button>
       </div>
-      <p className="mt-3 text-center text-xs text-muted-foreground">Mendukung link video TikTok dan Facebook</p>
+      <p className="mt-3 text-center text-xs text-muted-foreground">Mendukung link video TikTok</p>
     </form>
   )
 }

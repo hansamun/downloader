@@ -1,5 +1,5 @@
 export interface VideoInfo {
-  platform: "tiktok" | "facebook"
+  platform: "tiktok"
   title: string
   duration: string
   thumbnail: string
